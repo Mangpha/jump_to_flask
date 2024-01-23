@@ -2,7 +2,6 @@ from flask import Flask
 from flask_migrate import Migrate, migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from views import main_view
 import config
 
 db = SQLAlchemy()
@@ -19,6 +18,9 @@ def create_app():
     from models import Board
 
     # Blue Print
+    from views import main_view, question_view
+
+    app.register_blueprint(question_view.bp)
     app.register_blueprint(main_view.bp)
 
     return app
