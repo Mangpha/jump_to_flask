@@ -31,6 +31,14 @@
 				action="{{url_for('answer.create', question_id=question.id) }}"
 				method="post"
 			>
+				{{ form.csrf_token }} {% if form.errors %}
+				<section>
+					{% for field, errors in form.errors.items() %} {% for error in errors
+					%}
+					<input placeholder="{{error}}" aria-invalid="true" readonly />
+					{% endfor %} {% endfor %}
+				</section>
+				{% endif %}
 				<textarea name="content" id="content" rows="15"></textarea>
 				<input type="submit" value="Submit" />
 			</form>

@@ -17,9 +17,8 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% if question_list %}
+					{% if question_list %} {% for question in question_list %}
 					<tr>
-						{% for question in question_list %}
 						<td>{{ loop.index }}</td>
 						<td>
 							<a href="{{ url_for('question.detail', question_id=question.id)}}"
@@ -27,15 +26,17 @@
 							>
 						</td>
 						<td>{{ question.create_date }}</td>
-						{% endfor %}
 					</tr>
-					{% else %}
+					{% endfor %} {% else %}
 					<tr>
 						<td colspan="3">No Question</td>
 					</tr>
 					{% endif %}
 				</tbody>
 			</table>
+			<a href="{{ url_for('question.create') }}"
+				><button>Register a question</button></a
+			>
 		</main>
 	</body>
 </html>

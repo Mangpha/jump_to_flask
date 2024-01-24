@@ -1,0 +1,30 @@
+{% extends 'base.html' %} {% block content %}
+<main class="container">
+	<h5>Register a question</h5>
+	<form method="post">
+		{{ form.csrf_token }} {% if form.errors %}
+		<section>
+			{% for field, errors in form.errors.items() %} {% for error in errors %}
+			<input placeholder="{{error}}" aria-invalid="true" readonly />
+			{% endfor %} {% endfor %}
+		</section>
+		{% endif %}
+		<div>
+			<label for="subject">Title</label>
+			<input
+				type="text"
+				name="subject"
+				id="subject"
+				value="{{ form.subject.data or '' }}"
+			/>
+		</div>
+		<div>
+			<label for="content">Content</label>
+			<textarea name="content" id="content" rows="10">
+{{ form.content.data or '' }}</textarea
+			>
+		</div>
+		<button type="submit">Save</button>
+	</form>
+</main>
+{% endblock %}
