@@ -17,7 +17,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% if question_list %} {% for question in question_list %}
+					{% if question_list %} {% for question in question_list.items %}
 					<tr>
 						<td>{{ loop.index }}</td>
 						<td>
@@ -34,6 +34,49 @@
 					{% endif %}
 				</tbody>
 			</table>
+			<nav>
+				<ul>
+					{% if question_list.has_prev %}
+					<li>
+						<strong
+							><a href="?page={{question_list.prev_num}}">&larr;</a></strong
+						>
+					</li>
+					{% else %}
+					<li>
+						<strong
+							><a tabindex="-1" aria-disabled="true" href="javascript:void(0)"
+								>&larr;</a
+							></strong
+						>
+					</li>
+					{% endif %} {% for page_num in question_list.iter_pages() %} {% if
+					page_num %} {% if page_num != question_list.page %}
+					<li><a href="?page={{page_num}}">{{page_num}}</a></li>
+					{% else %}
+					<li><a href="javascript:void(0)">{{page_num}}</a></li>
+					{% endif %} {% else %}
+					<li>
+						<a href="javascript:void(0)">...</a>
+					</li>
+					{% endif %} {% endfor %} {% if question_list.has_next %}
+					<li>
+						<strong
+							><a href="?page={{question_list.next_num}}">&rarr;</a></strong
+						>
+					</li>
+					{% else %}
+					<li>
+						<strong>
+							<a href="javascript:void(0)" tabindex="-1" aria-disabled="true"
+								>&rarr;</a
+							></strong
+						>
+					</li>
+					{% endif %}
+				</ul>
+			</nav>
+
 			<a href="{{ url_for('question.create') }}"
 				><button>Register a question</button></a
 			>
