@@ -18,9 +18,10 @@ def create_app():
     from models import Board
 
     # Blue Print
-    from views import main_view, question_view
+    from views import main_view, question_view, answer_view
 
     app.register_blueprint(question_view.bp)
     app.register_blueprint(main_view.bp)
+    app.register_blueprint(answer_view.bp)
 
     return app
