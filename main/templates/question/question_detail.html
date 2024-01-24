@@ -11,7 +11,7 @@
 			<section>
 				<h2>{{question.subject}}</h2>
 				<div style="display: flex; justify-content: end">
-					{{question.create_date}}
+					{{question.create_date|datetime}}
 				</div>
 			</section>
 			<article>{{question.content}}</article>
@@ -21,7 +21,7 @@
 				<li>
 					<header>{{answer.content}}</header>
 					<footer style="display: flex; justify-content: end">
-						{{answer.create_date}}
+						{{answer.create_date|datetime}}
 					</footer>
 				</li>
 				{% endfor %}
