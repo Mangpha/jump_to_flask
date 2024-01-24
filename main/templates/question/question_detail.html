@@ -1,3 +1,4 @@
+{% extends 'base.html' %} {% block content %}
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -6,22 +7,34 @@
 		<title>Document</title>
 	</head>
 	<body>
-		<h1>{{question.subject}}</h1>
-		<div>{{question.content}}</div>
-		<h5>{{ question.answer_set|length }}개의 답변이 있습니다.</h5>
-		<div>
+		<main class="container">
+			<section>
+				<h2>{{question.subject}}</h2>
+				<div style="display: flex; justify-content: end">
+					{{question.create_date}}
+				</div>
+			</section>
+			<article>{{question.content}}</article>
+			<h5>{{ question.answer_set|length }}개의 답변이 있습니다.</h5>
 			<ul>
 				{% for answer in question.answer_set %}
-				<li>{{ answer.content }}</li>
+				<li>
+					<header>{{answer.content}}</header>
+					<footer style="display: flex; justify-content: end">
+						{{answer.create_date}}
+					</footer>
+				</li>
 				{% endfor %}
 			</ul>
-		</div>
-		<form
-			action="{{url_for('answer.create', question_id=question.id) }}"
-			method="post"
-		>
-			<textarea name="content" id="content" rows="15"></textarea>
-			<input type="submit" value="Submit" />
-		</form>
+
+			<form
+				action="{{url_for('answer.create', question_id=question.id) }}"
+				method="post"
+			>
+				<textarea name="content" id="content" rows="15"></textarea>
+				<input type="submit" value="Submit" />
+			</form>
+		</main>
 	</body>
 </html>
+{% endblock %}
