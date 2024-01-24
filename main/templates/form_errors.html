@@ -1,0 +1,12 @@
+{% if form.errors %}
+<section>
+	{% for field, errors in form.errors.items() %} {% for error in errors %}
+	<input placeholder="{{ error }}" aria-invalid="true" readonly />
+	{% endfor %} {% endfor %}
+</section>
+{% endif %}
+<section>
+	{% for message in get_flashed_messages() %}
+	<input placeholder="{{ message }}" aria-invalid="true" readonly />
+	{% endfor %}
+</section>

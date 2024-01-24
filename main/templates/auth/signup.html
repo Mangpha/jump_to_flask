@@ -1,0 +1,41 @@
+{% extends 'base.html' %} {% block content %}
+<main class="container">
+	<h5>Create Account</h5>
+	<form method="post">
+		{{ form.csrf_token }} {% include 'form_errors.html' %}
+		<label for="username">Username</label>
+		<input
+			type="text"
+			name="username"
+			id="username"
+			placeholder="Input Username"
+			value="{{ form.username.data or '' }}"
+		/>
+		<label for="password">Password</label>
+		<input
+			type="password"
+			name="password"
+			id="password"
+			placeholder="Input Password"
+			value="{{ form.password.data or '' }}"
+		/>
+		<label for="password_check">Repeat Password</label>
+		<input
+			type="password"
+			name="password_check"
+			id="password_check"
+			placeholder="Input Password"
+			value="{{ form.password_check.data or '' }}"
+		/>
+		<label for="email">Email</label>
+		<input
+			type="text"
+			name="email"
+			id="email"
+			placeholder="Input your email"
+			value="{{ form.email.data or '' }}"
+		/>
+		<button type="submit">Create!</button>
+	</form>
+</main>
+{% endblock %}
