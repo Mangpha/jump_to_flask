@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, url_for, request
+from flask import Blueprint, render_template, url_for, request, g
 from werkzeug.utils import redirect
 from datetime import datetime
 
 from main import db
 from models import Board
 from utils.Forms import AnswerForm, QuestionForm
+from views.auth_view import login_required
 
 bp = Blueprint("question", __name__, url_prefix="/question")
 
@@ -27,6 +28,7 @@ def detail(question_id):
 
 
 @bp.route("/create/", methods=("GET", "POST"))
+@login_required
 def create():
     form = QuestionForm()
     if request.method == "POST" and form.validate_on_submit():
@@ -34,6 +36,7 @@ def create():
             subject=form.subject.data,
             content=form.content.data,
             create_date=datetime.now(),
+            user=g.user,
         )
         db.session.add(question)
         db.session.commit()

@@ -39,7 +39,20 @@
 					{% endfor %} {% endfor %}
 				</section>
 				{% endif %}
-				<textarea name="content" id="content" rows="15"></textarea>
+				<textarea
+					{%
+					if
+					not
+					g.user
+					%}
+					disabled
+					{%
+					endif
+					%}
+					name="content"
+					id="content"
+					rows="15"
+				></textarea>
 				<input type="submit" value="Submit" />
 			</form>
 		</main>
