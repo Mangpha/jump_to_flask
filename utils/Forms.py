@@ -1,3 +1,4 @@
+from tokenize import String
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, PasswordField, EmailField
 from wtforms.validators import DataRequired, Length, EqualTo, Email
@@ -48,3 +49,8 @@ class UserCreateForm(FlaskForm):
     email = EmailField(
         "Email", validators=[DataRequired("Email field is required."), Email()]
     )
+
+
+class UserLoginForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])

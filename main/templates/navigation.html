@@ -5,9 +5,16 @@
 			<a href="{{ url_for('main.index') }}"><strong>Mangpha</strong></a>
 		</li>
 	</ul>
+	{% if g.user %}
 	<ul>
-		<li><a href="#">Sign in</a></li>
+		<li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+		<li></li>
+	</ul>
+	{% else %}
+	<ul>
+		<li><a href="{{ url_for('auth.login') }}">Sign in</a></li>
 		<li><a href="{{ url_for('auth.signup') }}">Sign Up</a></li>
 		<li></li>
 	</ul>
+	{% endif %}
 </nav>
