@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, request, g
+from flask import Blueprint, render_template, url_for, request, g, flash
 from werkzeug.utils import redirect
 from datetime import datetime
 
@@ -42,3 +42,34 @@ def create():
         db.session.commit()
         return redirect(url_for("main.index"))
     return render_template("question/question_form.html", form=form)
+
+
+@bp.route("/modify/<int:question_id>", methods=("GET", "POST"))
+@login_required
+def modify(question_id):
+    question = Board.Question.query.get_or_404(question_id)
+    if g.user != question.user:
+        flash("Permission Denied")
+        return redirect(url_for("question.detail", question_id=question_id))
+    if request.method == "POST":
+        form = QuestionForm()
+        if form.validate_on_submit():
+            form.populate_obj(question)
+            question.update_date = datetime.now()
+            db.session.commit()
+            return redirect(url_for("question.detail", question_id=question_id))
+    else:
+        form = QuestionForm(obj=question)
+    return render_template("question/question_form.html", form=form)
+
+
+@bp.route("/delete/<int:question_id>")
+@login_required
+def delete(question_id):
+    question = Board.Question.query.get_or_404(question_id)
+    if g.user != question.user:
+        flash("Permission Denied")
+        return redirect(url_for("question.detail", question_id=question_id))
+    db.session.delete(question)
+    db.session.commit()
+    return redirect(url_for("question._list"))

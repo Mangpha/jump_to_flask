@@ -8,10 +8,30 @@
 	</head>
 	<body>
 		<main class="container">
+			{% for message in get_flashed_messages() %}
+			<input aria-invalid="true" value="{{ message }}" />
+			{% endfor %}
 			<section>
 				<h2>{{question.subject}}</h2>
-				<div style="display: flex; justify-content: end">
-					{{question.create_date|datetime}}
+				<div>
+					{% if g.user == question.user %}
+					<a href="{{ url_for('question.modify', question_id=question.id) }}"
+						>Modify</a
+					>
+					<a
+						href="javascript:void(0)"
+						class="delete"
+						data-uri="{{ url_for('question.delete', question_id=question.id) }}"
+						>Delete</a
+					>
+					{% endif %}
+				</div>
+				<div style="display: flex; justify-content: space-between">
+					<small>{{ question.user.username }}</small>
+					<div>
+						<div>Create: {{ question.create_date|datetime }}</div>
+						<div>Update: {{ question.update_date|datetime }}</div>
+					</div>
 				</div>
 			</section>
 			<article>{{question.content}}</article>
@@ -20,9 +40,26 @@
 				{% for answer in question.answer_set %}
 				<li>
 					<header>{{answer.content}}</header>
-					<footer style="display: flex; justify-content: end">
-						{{answer.create_date|datetime}}
+					<footer style="display: flex; justify-content: space-between">
+						<small>{{ answer.user.username }}</small>
+						<div>
+							<div>Create: {{answer.create_date|datetime}}</div>
+							<div>Update: {{ answer.update_date|datetime }}</div>
+						</div>
 					</footer>
+					<div>
+						{% if g.user == answer.user %}
+						<a href="{{ url_for('answer.modify', answer_id=answer.id) }}"
+							>Modify</a
+						>
+						<a
+							href="javascript:void(0)"
+							class="delete"
+							data-url="{{ url_for('answer.delete', answer_id=answer.id) }}"
+							>Delete</a
+						>
+						{% endif %}
+					</div>
 				</li>
 				{% endfor %}
 			</ul>
@@ -58,4 +95,15 @@
 		</main>
 	</body>
 </html>
+{% endblock %} {% block script %}
+<script type="text/javascript">
+	const delete_elements = document.getElementsByClassName('delete');
+	Array.from(delete_elements).forEach((el) => {
+		el.addEventListener('click', () => {
+			if (confirm('Do you want to delete?')) {
+				location.href = el.dataset.uri;
+			}
+		});
+	});
+</script>
 {% endblock %}

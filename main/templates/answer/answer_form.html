@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block content %}
+<main class="container">
+	<div>
+		<h5>Modify answer</h5>
+		<form method="post">
+			{{ form.csrf_token }} {% include 'form_errors.html' %}
+			<div>
+				<label for="content">Content</label>
+				<textarea name="content" id="content" rows="10">
+          {{ form.content.data or '' }}
+        </textarea>
+			</div>
+			<button type="submit">Save</button>
+		</form>
+	</div>
+</main>
+{% endblock %}
