@@ -57,3 +57,16 @@ def delete(answer_id):
         db.session.delete(answer)
         db.session.commit()
     return redirect(url_for("question.detail", question_id=answer.question.id))
+
+
+@bp.route("/vote/<int:answer_id>")
+@login_required
+def vote(answer_id):
+    answer = Answer.query.get_or_404(answer_id)
+    if g.user == answer.user:
+        flash("Cannot vote your comment")
+    else:
+        answer.voter.append(g.user)
+        db.session.commit()
+
+    return redirect((url_for("question.detail", question_id=answer.question.id)))

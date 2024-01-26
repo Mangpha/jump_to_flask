@@ -8,9 +8,13 @@
 	</head>
 	<body>
 		<main class="container">
+			<!-- Error Start -->
 			{% for message in get_flashed_messages() %}
 			<input aria-invalid="true" value="{{ message }}" />
 			{% endfor %}
+			<!-- Error End -->
+
+			<!-- Question Start -->
 			<section>
 				<h2>{{question.subject}}</h2>
 				<div>
@@ -30,11 +34,29 @@
 					<small>{{ question.user.username }}</small>
 					<div>
 						<div>Create: {{ question.create_date|datetime }}</div>
+						{% if question.update_time %}
 						<div>Update: {{ question.update_date|datetime }}</div>
+						{% endif %}
 					</div>
 				</div>
+
+				<!-- Recommend Start -->
+				<div>
+					<a
+						href="javascript:void(0)"
+						data-uri="{{ url_for('question.vote', question_id=question.id) }}"
+						class="recommend"
+					>
+						Recommend <span class="badge">{{ question.voter|length }}</span>
+					</a>
+				</div>
+				<!-- Recommend End -->
 			</section>
-			<article>{{question.content}}</article>
+			<article>{{ question.content }}</article>
+
+			<!-- Question End -->
+
+			<!-- Answer List Start -->
 			<h5>{{ question.answer_set|length }}개의 답변이 있습니다.</h5>
 			<ul>
 				{% for answer in question.answer_set %}
@@ -43,10 +65,18 @@
 					<footer style="display: flex; justify-content: space-between">
 						<small>{{ answer.user.username }}</small>
 						<div>
-							<div>Create: {{answer.create_date|datetime}}</div>
+							<div>Create: {{ answer.create_date|datetime }}</div>
+							{% if answer.update_date %}
 							<div>Update: {{ answer.update_date|datetime }}</div>
+							{% endif %}
 						</div>
 					</footer>
+					<a
+						href="javascript:void(0)"
+						data-uri="{{ url_for('answer.vote', answer_id=answer.id) }}"
+					>
+						Recommend <span>{{ answer.voter|length }}</span>
+					</a>
 					<div>
 						{% if g.user == answer.user %}
 						<a href="{{ url_for('answer.modify', answer_id=answer.id) }}"
@@ -63,6 +93,10 @@
 				</li>
 				{% endfor %}
 			</ul>
+
+			<!-- Answer List End -->
+
+			<!-- Answer Form Start -->
 
 			<form
 				action="{{url_for('answer.create', question_id=question.id) }}"
@@ -92,6 +126,7 @@
 				></textarea>
 				<input type="submit" value="Submit" />
 			</form>
+			<!-- Answer Form End -->
 		</main>
 	</body>
 </html>
@@ -101,6 +136,14 @@
 	Array.from(delete_elements).forEach((el) => {
 		el.addEventListener('click', () => {
 			if (confirm('Do you want to delete?')) {
+				location.href = el.dataset.uri;
+			}
+		});
+	});
+	const recommend_elements = document.getElementsByClassName('recommend');
+	Array.from(recommend_elements).forEach((el) => {
+		el.addEventListener('click', () => {
+			if (confirm('Recommend?')) {
 				location.href = el.dataset.uri;
 			}
 		});
