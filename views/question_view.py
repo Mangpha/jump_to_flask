@@ -3,7 +3,7 @@ from werkzeug.utils import redirect
 from datetime import datetime
 
 from main import db
-from models import Board
+from models import Board, User
 from utils.Forms import AnswerForm, QuestionForm
 from views.auth_view import login_required
 
@@ -13,9 +13,34 @@ bp = Blueprint("question", __name__, url_prefix="/question")
 @bp.route("/list/")
 def _list():
     page = request.args.get("page", type=int, default=1)
+    kw = request.args.get("kw", type=str, default="")
     question_list = Board.Question.query.order_by(Board.Question.create_date.desc())
+    if kw:
+        search = "%%{}%%".format(kw)
+        sub_query = (
+            db.session.query(
+                Board.Answer.question_id, Board.Answer.content, User.User.username
+            )
+            .join(User.User, Board.Answer.user_id == User.User.id)
+            .subquery()
+        )
+        question_list = (
+            question_list.join(User.User)
+            .outerjoin(sub_query, sub_query.c.question_id == Board.Question.id)
+            .filter(
+                Board.Question.subject.ilike(search)
+                | Board.Question.content.ilike(search)
+                | User.User.username.ilike(search)
+                | sub_query.c.content.ilike(search)
+                | sub_query.c.username.ilike(search)
+            )
+            .distinct()
+        )
+
     question_list = question_list.paginate(page=page, per_page=10)
-    return render_template("question/question_list.html", question_list=question_list)
+    return render_template(
+        "question/question_list.html", question_list=question_list, page=page, kw=kw
+    )
 
 
 @bp.route("/detail/<int:question_id>/")

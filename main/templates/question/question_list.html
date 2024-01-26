@@ -8,6 +8,21 @@
 	</head>
 	<body>
 		<main class="container">
+			<div>
+				<div>
+					<a href="{{ url_for('question.create') }}"
+						><button>Register a question</button></a
+					>
+				</div>
+				<div>
+					<input type="text" id="search_kw" value="{{ kw or '' }}" /><button
+						type="button"
+						id="btn_search"
+					>
+						Search
+					</button>
+				</div>
+			</div>
 			<table>
 				<thead>
 					<tr>
@@ -47,7 +62,12 @@
 					{% if question_list.has_prev %}
 					<li>
 						<strong
-							><a href="?page={{question_list.prev_num}}">&larr;</a></strong
+							><a
+								class="page-link"
+								data-page="{{ question_list.prev_num }}"
+								href="javascript:void(0)"
+								>&larr;</a
+							></strong
 						>
 					</li>
 					{% else %}
@@ -60,9 +80,16 @@
 					</li>
 					{% endif %} {% for page_num in question_list.iter_pages() %} {% if
 					page_num %} {% if page_num != question_list.page %}
-					<li><a href="?page={{page_num}}">{{page_num}}</a></li>
+					<li>
+						<a
+							class="page-link"
+							data-page="{{ page_num }}"
+							href="javascript:void(0)"
+							>{{ page_num }}</a
+						>
+					</li>
 					{% else %}
-					<li><a href="javascript:void(0)">{{page_num}}</a></li>
+					<li><a href="javascript:void(0)">{{ page_num }}</a></li>
 					{% endif %} {% else %}
 					<li>
 						<a href="javascript:void(0)">...</a>
@@ -70,7 +97,12 @@
 					{% endif %} {% endfor %} {% if question_list.has_next %}
 					<li>
 						<strong
-							><a href="?page={{question_list.next_num}}">&rarr;</a></strong
+							><a
+								class="page-link"
+								data-page="{{ question_list.next_num }}"
+								href="javascript:void(0)"
+								>&rarr;</a
+							></strong
 						>
 					</li>
 					{% else %}
@@ -84,11 +116,32 @@
 					{% endif %}
 				</ul>
 			</nav>
-
-			<a href="{{ url_for('question.create') }}"
-				><button>Register a question</button></a
+			<form
+				id="searchForm"
+				method="get"
+				action="{{ url_for('question._list') }}"
 			>
+				<input type="hidden" id="kw" name="kw" value="{{ kw or '' }}" />
+				<input type="hidden" id="page" name="page" value="{{ page }}" />
+			</form>
 		</main>
 	</body>
 </html>
+{% endblock %} {% block script %}
+<script type="text/javascript">
+	const page_elements = document.getElementsByClassName('page-link');
+	Array.from(page_elements).forEach((el) => {
+		el.addEventListener('click', () => {
+			document.getElementById('page').value = el.dataset.page;
+			document.getElementById('searchForm').submit();
+		});
+	});
+	const btn_search = document.getElementById('btn_search');
+	btn_search.addEventListener('click', () => {
+		document.getElementById('kw').value =
+			document.getElementById('search_kw').value;
+		document.getElementById('page').value = 1;
+		document.getElementById('searchForm').submit();
+	});
+</script>
 {% endblock %}
