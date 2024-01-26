@@ -2,6 +2,7 @@
 /include
 /lib
 pyvenv.cfg
-/**/__pycache__
+__pycache__
 .env
 **.db
+migrations
