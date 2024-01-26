@@ -26,7 +26,7 @@ def create_app():
 
     # ORM
     db.init_app(app)
-    if app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite"):
+    if app.config["SQLALCHEMY_DATABASE_URI"]:
         migrate.init_app(app, db, render_as_batch=True)
     else:
         migrate.init_app(app, db)
